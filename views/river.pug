@@ -5,7 +5,7 @@ html
     form(method='get')
         select(name='dropDown', id='')
             each location in Locations
-                option=location.location
+                option(value=location.site_id)=location.location
             input(type='submit', value='Go')
     h1= source
     p Water Temp: #{water_temp} °C

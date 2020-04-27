@@ -21,9 +21,10 @@ update_USGS();
 update_OWM();
 //routes
 app.get('/', function (req, res) {
-    let water_data_promise = db_con.then(db => db.query(`SELECT location,value FROM temp ORDER BY time DESC LIMIT 1 `));
+    const siteid = req.query.dropDown;
+    let water_data_promise = db_con.then(db => db.query(`SELECT location,value FROM temp WHERE site_id = ${siteid} ORDER BY time DESC LIMIT 1 `));
     let air_data_promise = db_con.then(db => db.query(`SELECT temp,weather FROM weather ORDER BY id DESC LIMIT 1`));
-    let location_data_promise = db_con.then(db => db.query(`SELECT DISTINCT location FROM temp ORDER BY time DESC`));
+    let location_data_promise = db_con.then(db => db.query(`SELECT DISTINCT location,site_id FROM temp ORDER BY time DESC`));
     Promise.all([water_data_promise,air_data_promise,location_data_promise]).then(data => {
         data = [data[0][0],data[1][0],data[2]];
         res.render('river', { title: 'River', source: data[0].location,
@@ -39,8 +40,9 @@ function update_USGS(){
     let json_promise = fetch(url).then(x => {return x.json()});
     Promise.all([json_promise,db_con]).then(data => {
         var vals = [];
-        data[0].value.timeSeries.forEach(x => {vals.push([x.sourceInfo.siteName,x.values[0].value[0].value,x.values[0].value[0].dateTime])});
-        data[1].query("INSERT INTO temp(location,value,time) VALUES ?",[vals]);
+        data[0].value.timeSeries.forEach(x =>
+            {vals.push([x.sourceInfo.siteName,x.values[0].value[0].value,x.values[0].value[0].dateTime,x.sourceInfo.siteCode[0].value])});
+        data[1].query("INSERT INTO temp(location,value,time,site_id) VALUES ?",[vals]);
     })
 }
 function update_OWM(){
