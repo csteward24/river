@@ -1,0 +1,13 @@
+html
+  head
+    title= title
+  body
+    form(method='get')
+        select(name='dropDown', id='')
+            each location in Locations
+                option=location.location
+            input(type='submit', value='Go')
+    h1= source
+    p Water Temp: #{water_temp} °C
+    p Air Temp: #{air_temp} °F
+    p Weather: #{weather}

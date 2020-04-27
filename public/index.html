@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project River</title>
+</head>
+<body onload="main()">
+    <script src="test.js"></script>
+    <h1>Project River</h1>
+    <hr>
+    <p id="source"></p>
+    <p id="rivertemp">Text goes here</p>
+    <form>
+        <label><input type="radio" name="temp" id="rd_f" value="f" onclick="update()" checked>°F</label>
+        <label><input type="radio" name="temp" id="rd_c" value="c" onclick="update()">°C</label>
+    </form>
+    <p id="updated">Last updated: </p>
+</body>
+</html>
